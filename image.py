@@ -6,19 +6,27 @@ from threading import Thread
 from queue import Queue
 
 q = Queue()
-image_labels = []  # Keep references to prevent garbage collection
-IMAGE_WIDTH = 300   # Thumbnail width
-IMAGES_PER_ROW = 3  # Grid layout
-index = 0  # For grid positioning
+image_labels = [] 
+IMAGE_WIDTH = 300  
+IMAGES_PER_ROW = 3  
+index = 0  
 
-# ----------- Read image paths from a.txt -----------
+# ----------- Read image paths from D drive -----------
 def readImage():
-    with open('a.txt', 'r', encoding='utf-8') as files:
-        for line in files:
-            file_path = line.strip()
-            if os.path.exists(file_path):
-                q.put(file_path)
-    q.put(None)  # Sentinel
+    image_extensions = ('.jpg', '.jpeg', '.png', '.gif', '.bmp', '.tiff', '.webp')
+
+    drive_path = "D:\\"
+
+    for root, dirs, files in os.walk(drive_path):
+
+        dirs[:] = [d for d in dirs if d != 'node_modules']
+
+        for file in files:
+            if file.lower().endswith(image_extensions):
+                q.put(os.path.join(root, file))
+
+
+    q.put(None)  #  mark end of images
 
 # ----------- Show full image in popup -----------
 def show_full_image(img_path):
