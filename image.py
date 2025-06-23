@@ -23,6 +23,7 @@ def readImage():
 
         for file in files:
             if file.lower().endswith(image_extensions):
+                path = os.path.join(root, file)
                 q.put(os.path.join(root, file))
 
 
